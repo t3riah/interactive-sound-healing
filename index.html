@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="light dark"/>
+<link rel="icon" href="data:,"/>
+<title>Interactive Sound Healing Installation — Frequencies, Waveforms & Colour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFBF2; --bg2:#FFF6E6; --surface:#FFFFFF; --surface2:#F7EEDD;
+  --ink:#1C1917; --muted:#6B6259; --line:#E7DDC8;
+  --teal:#0F766E; --teal-dark:#115E59; --amber:#B45309; --amber-light:#FEF3C7;
+  --radius:20px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#131110; --bg2:#1A1714; --surface:#1E1B18; --surface2:#27221C; --ink:#F5EFE6; --muted:#A8A099; --line:#332E28; --amber-light:#29200E; }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.6}
+a{color:var(--teal)}
+button,select,input{font-family:inherit;min-height:44px}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;line-height:0.95;margin:0}
+h1{font-size:clamp(3rem,9vw,5.8rem);font-weight:600;letter-spacing:-0.02em}
+h2{font-size:clamp(2.1rem,5vw,3.2rem);font-weight:600}
+h3{font-size:1.55rem}
+.mono{font-family:"JetBrains Mono",monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.topnav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%, transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topnav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+.logo{font-family:"Cormorant Garamond",serif;font-size:1.4rem;font-weight:700;letter-spacing:-0.02em}
+.logo span{color:var(--teal)}
+.navlinks{display:flex;gap:6px;flex-wrap:wrap}
+.navlinks a{font-size:0.85rem;font-weight:600;text-decoration:none;color:var(--ink);padding:10px 12px;border-radius:999px}
+.navlinks a:hover{background:var(--surface2)}
+.hero{padding:56px 0 28px;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:28px;align-items:start}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#FFFBEB;padding:7px 12px;border-radius:999px;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:700}
+.hero p.lead{font-size:1.18rem;color:var(--muted);max-width:620px;margin:18px 0}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btn{border:1px solid var(--ink);background:var(--ink);color:#fff;padding:12px 18px;border-radius:999px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;font-size:0.95rem}
+.btn.secondary{background:transparent;color:var(--ink)}
+.btn.teal{background:var(--teal);border-color:var(--teal)}
+.btn:active{transform:scale(0.98)}
+.hero-card{background:var(--ink);color:#FFF7ED;border-radius:28px;padding:22px;position:relative;overflow:hidden}
+.hero-card h3{color:#fff}
+#heroCanvas{width:100%;height:180px;display:block;background:#0C0A09;border-radius:16px;margin:14px 0}
+.freq-big{font-size:3.2rem;line-height:1;font-family:"JetBrains Mono",monospace;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px}
+.stat b{font-size:1.35rem;display:block;line-height:1}
+.stat span{font-size:0.82rem;color:var(--muted)}
+section{padding:52px 0}
+.section-head{max-width:720px;margin-bottom:24px}
+.section-head p{color:var(--muted);font-size:1.05rem}
+.kicker{font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:800;color:var(--teal);margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.card p{color:var(--muted)}
+.lab{background:var(--ink);color:#FFFBEB;border-radius:28px;padding:26px}
+.lab .muted{color:#D6CFC4}
+.lab-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:22px}
+input[type=range]{width:100%;accent-color:#F59E0B;height:44px}
+.control-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.chip{border:1px solid #44403C;background:#292524;color:#FFFBEB;padding:10px 14px;border-radius:999px;cursor:pointer;font-weight:600}
+.chip.active{background:#F59E0B;color:#1C1917;border-color:#F59E0B}
+.chip.light{border-color:var(--line);background:var(--surface);color:var(--ink)}
+.chip.light.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+#scope{width:100%;height:220px;background:#0C0A09;border-radius:16px;display:block}
+.readout{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.readout div{background:#292524;border-radius:14px;padding:12px}
+.readout div span{font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;opacity:0.7;display:block}
+.readout div b{font-size:1.15rem}
+.color-swatch{height:72px;border-radius:14px;margin-top:12px;border:1px solid rgba(255,255,255,0.15);display:flex;align-items:end;padding:10px;font-weight:700;font-size:0.85rem}
+.wave-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.wave-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;text-align:left;cursor:pointer;width:100%}
+.wave-card.active{outline:3px solid var(--teal);outline-offset:2px}
+.wave-card canvas{width:100%;height:70px;display:block}
+.wave-card h4{margin:10px 0 4px;font-size:1rem}
+.wave-card p{font-size:0.88rem;margin:0}
+.sol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sol-card{border-radius:18px;padding:18px;color:#fff;cursor:pointer;border:none;text-align:left;width:100%}
+.sol-card b{font-size:1.9rem;display:block;line-height:1;font-family:"JetBrains Mono",monospace}
+.sol-card span{font-weight:700}
+.sol-card p{color:rgba(255,255,255,0.88);font-size:0.9rem;margin:6px 0 0}
+.piano-wrap{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px;overflow:hidden}
+.piano{display:flex;gap:4px;position:relative;height:190px;margin:16px 0}
+.key-white{flex:1;background:#FFFEFB;border:1.5px solid #1C1917;border-radius:0 0 10px 10px;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:10px;font-weight:700;position:relative;z-index:1}
+.key-white.active{filter:brightness(0.92)}
+.key-black{position:absolute;width:9%;height:110px;background:#1C1917;color:#fff;border-radius:0 0 8px 8px;cursor:pointer;z-index:2;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-size:0.75rem;font-weight:700;border:1px solid #000}
+.dot{width:14px;height:14px;border-radius:50%;margin-bottom:6px;border:2px solid rgba(0,0,0,0.15)}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{padding:13px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:0.93rem;vertical-align:top}
+th{font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+#cymCanvas{width:100%;height:340px;background:#0F0E0C;border-radius:18px;display:block}
+.map-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.map-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.map-card .icon{font-size:1.8rem;line-height:1}
+.binaural{background:#FFEDD5;border:1px solid #FDBA74;border-radius:28px;padding:26px;color:#431407}
+@media(prefers-color-scheme:dark){.binaural{background:#292018;color:#FFEDD5;border-color:#44403C}}
+.slider-label{display:flex;justify-content:space-between;font-weight:700;font-size:0.9rem}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap}
+.preset{flex:1;min-width:110px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;text-align:left}
+.preset.active{border-color:var(--teal);outline:2px solid var(--teal)}
+details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+details+details{margin-top:10px}
+summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+.footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:0.9rem}
+.note{font-size:0.85rem;background:var(--amber-light);border:1px solid #FDE68A;color:#92400E;padding:12px 14px;border-radius:12px}
+@media(prefers-color-scheme:dark){.note{color:#FDE68A;border-color:#44403C}}
+@media(max-width:900px){.hero-grid,.lab-grid,.grid2{grid-template-columns:1fr}.grid3,.wave-grid,.sol-grid,.map-grid{grid-template-columns:1fr 1fr}.navlinks{display:none}}
+@media(max-width:560px){.grid3,.wave-grid,.sol-grid,.map-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr 1fr}.piano{height:160px}.key-black{height:90px} table{min-width:0} th,td{padding:10px 8px;font-size:0.82rem} .table-wrap{overflow:visible}}
+</style>
+</head>
+<body>
+<header class="topnav"><div class="wrap topnav-inner"><div class="logo">Resonance <span>• Sound Healing</span></div><nav class="navlinks"><a href="#lab">Frequency Lab</a><a href="#waves">Waveforms</a><a href="#binaural">Binaural</a><a href="#solfeggio">Solfeggio</a><a href="#piano">Notes & Chakras</a><a href="#maps">Sound Mapped</a></nav><button class="btn" id="stopAllTop" style="padding:10px 14px">■ Stop Sound</button></div></header>
+
+<div class="wrap hero">
+  <div class="hero-grid">
+    <div>
+      <span class="eyebrow">🎧 Use headphones for binaural beats</span>
+      <h1>Everything vibrates. Learn to listen.</h1>
+      <p class="lead">An interactive installation for sound healing — what frequency really means, how waveforms shape feeling, how binaural beats work, and how a single note can become colour, geometry, number, notation, light and touch.</p>
+      <p>Sound healing is the intentional use of tone, rhythm and listening to support relaxation, focus and body awareness. It rests on real acoustics — vibration, resonance and entrainment — even where traditional claims go beyond what science has proven. This page keeps both clear: <strong>try everything, hear everything.</strong></p>
+      <div class="hero-actions"><a href="#lab" class="btn teal">Start the Frequency Lab →</a><a href="#piano" class="btn secondary">Play the Chakra Piano</a></div>
+      <div class="stats">
+        <div class="stat"><b>20 – 20,000 Hz</b><span>Typical human hearing range</span></div>
+        <div class="stat"><b>432 / 440 Hz</b><span>Two tunings for A4 — debated, audible</span></div>
+        <div class="stat"><b>0.5 – 40 Hz</b><span>Beat range linked to brainwave bands</span></div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div style="display:flex;justify-content:space-between;align-items:start"><div><p style="margin:0;opacity:0.7;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:700" id="heroStatus">Tap a frequency to play</p><div class="freq-big" id="heroFreq">528 Hz</div><p style="margin:4px 0 0">The “love frequency” • Mi in the healing-frequencies tradition • Heart-adjacent in solfeggio lore</p></div><span id="heroBadge" style="background:#44403C;color:#FFFBEB;padding:6px 10px;border-radius:999px;font-weight:800;font-size:0.8rem">READY</span></div>
+      <canvas id="heroCanvas" width="600" height="220"></canvas>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="chip" data-hero="174">174 Hz</button><button class="chip" data-hero="396">396 Hz</button><button class="chip active" data-hero="528">528 Hz</button><button class="chip" data-hero="741">741 Hz</button><button class="chip" data-hero="963">963 Hz</button></div>
+      <p style="font-size:0.88rem;opacity:0.85;margin:14px 0 0">Tap a frequency to hear it and watch its wave. Lower tones feel spacious and grounding; higher tones feel bright and alerting. Same physics, different experience.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PRINCIPLES -->
+<section style="padding-top:12px"><div class="wrap">
+  <div class="section-head"><div class="kicker">01 — Foundations</div><h2>The core principles</h2><p>Five ideas explain almost everything in sound healing. Master these and the rest — bowls, tuning forks, chanting, gongs — makes sense.</p></div>
+  <div class="grid3">
+    <article class="card"><h3>1. Vibration</h3><p>All sound is vibration travelling as pressure waves through air, water and tissue. Pitch is how fast it vibrates — measured in Hertz (cycles per second). The body is ~60% water, an excellent sound conductor, which is why you <em>feel</em> bass in your chest.</p></article>
+    <article class="card"><h3>2. Resonance</h3><p>Every object has natural frequencies at which it vibrates most easily. A tuning fork can make another identical fork sing without touch. Sound healing aims tones at the body hoping for sympathetic resonance — like pushing a swing at its own rhythm.</p></article>
+    <article class="card"><h3>3. Entrainment</h3><p>Rhythmic systems sync up. Pendulum clocks on one wall align; heart rate, breath and brainwaves can drift toward a steady external rhythm. Slow, regular sound tends to invite slower breathing — the basis of most relaxation practice.</p></article>
+    <article class="card"><h3>4. Harmonics</h3><p>Real sounds are never one frequency. A voice or bowl produces a fundamental plus overtones at 2×, 3×, 4× that frequency. That overtone recipe — the <em>timbre</em> — is why a flute and a violin on the same note sound utterly different.</p></article>
+    <article class="card"><h3>5. Intention & Listening</h3><p>Attention changes experience. Focused listening lowers the threshold for noticing subtle sensation and shifts autonomic state. Practitioners pair tone with intention; researchers would call part of this expectation, ritual and deep rest — all still real effects.</p></article>
+    <article class="card" style="background:var(--ink);color:#FFFBEB"><h3 style="color:#fff">What is a Hertz?</h3><p style="color:#D6CFC4"><strong style="color:#fff">1 Hz = 1 vibration per second.</strong><br>A4 = 440 Hz means the air pulses 440 times a second. Double it → 880 Hz, one octave higher, same note name. Halve it → 220 Hz, one octave lower. Octaves are the universe’s 2:1 ratio.</p></article>
+  </div>
+</div></section>
+
+<!-- FREQUENCY LAB -->
+<section id="lab" style="padding-top:8px"><div class="wrap">
+  <div class="section-head"><div class="kicker">02 — Interactive Lab</div><h2>The Frequency Lab</h2><p>Drag the slider. You are changing how many times per second the air vibrates. Watch the wave compress, the colour shift, and the nearest musical note change.</p></div>
+  <div class="lab">
+    <div class="lab-grid">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:10px"><div><span style="font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;font-weight:700">Frequency</span><div style="font-size:3rem;line-height:1;font-weight:800"><span id="freqVal">261.6</span> <small style="font-size:1.2rem">Hz</small></div></div><div style="text-align:right"><div id="noteName" style="font-size:1.6rem;font-weight:800">C4 — Middle C</div><div class="muted" id="noteDetail">Root Chakra • Red</div></div></div>
+        <input type="range" id="freqSlider" min="0" max="1000" value="420">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;opacity:0.7"><span>32 Hz — sub-bass, felt</span><span>261 Hz — Middle C</span><span>2000 Hz — bright</span></div>
+        <div class="control-row" id="waveBtns"><button class="chip active" data-wave="sine">Sine — pure</button><button class="chip" data-wave="triangle">Triangle — soft</button><button class="chip" data-wave="sawtooth">Sawtooth — buzzy</button><button class="chip" data-wave="square">Square — hollow</button></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn" id="playBtn" style="background:#F59E0B;border-color:#F59E0B;color:#000;flex:1">▶ Play Tone</button><button class="btn secondary" id="stopBtn" style="color:#fff;border-color:#fff">Stop</button></div>
+        <div class="color-swatch" id="colorSwatch" style="background:#E11D48"><span id="colorLabel">Mapped colour: Red — sound transposed up ~40 octaves becomes visible light</span></div>
+        <p class="muted" style="font-size:0.88rem">How colour mapping works: double a tone’s frequency about 40 times and it enters the visible light spectrum (≈430–770 THz). Newton, Scriabin and modern chromesthesia research all map the 12 notes around the colour wheel — not identical tables, same impulse: pitch is circular, so is hue.</p>
+      </div>
+      <div>
+        <canvas id="scope" width="640" height="260"></canvas>
+        <div class="readout">
+          <div><span>Wavelength in air</span><b id="wavelength">1.31 m</b></div>
+          <div><span>Period (1 cycle)</span><b id="period">3.82 ms</b></div>
+          <div><span>Octaves above 32 Hz</span><b id="octaves">3.03</b></div>
+          <div><span>Feeling zone</span><b id="zone">Warm / vocal range</b></div>
+        </div>
+        <div style="background:#292524;border-radius:14px;padding:14px;margin-top:10px"><strong>Try this:</strong> <span class="muted">Set 110 Hz (A2) — feel the spaciousness. Jump to 880 Hz (A5) — same note, four octaves? No — three octaves up (110→220→440→880). Your ear hears “sameness” because the ratio is exactly 8:1.</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px" class="quick-row">
+    <button class="chip light" data-quick="65.4">65 Hz — C2 Deep</button><button class="chip light" data-quick="174">174 Hz — Foundation</button><button class="chip light" data-quick="440">440 Hz — A4 Concert pitch</button><button class="chip light" data-quick="432">432 Hz — A4 Alternative tuning</button>
+  </div>
+</div></section>
+
+<!-- WAVEFORMS -->
+<section id="waves"><div class="wrap">
+  <div class="section-head"><div class="kicker">03 — Waveforms & Timbre</div><h2>Same pitch, different shape, different feeling</h2><p>A waveform is the shape of vibration over time. Shape = harmonics = character. Tap any card to hear it at A4 (440 Hz).</p></div>
+  <div class="wave-grid" id="waveGrid"></div>
+  <div class="grid2" style="margin-top:16px">
+    <div class="card"><h3>Harmonics, in plain terms</h3><p>A sine wave has <strong>one</strong> frequency — laboratory-pure, like a tuning fork. Every natural sound adds overtones:</p><p class="mono" style="background:var(--surface2);padding:12px;border-radius:10px;font-size:0.9rem">Fundamental 100 Hz<br>+ 200 Hz (octave) + 300 Hz (octave + fifth / 12th) + 400 Hz…</p><p>Triangle keeps only odd harmonics, softly. Square keeps odd harmonics, strongly — clarinet-like. Sawtooth keeps <em>all</em> harmonics — strings, brass, buzz. Singing bowls are prized because their inharmonic partials shimmer and beat against each other.</p></div>
+    <div class="card"><h3>Amplitude, frequency, phase</h3><p><strong>Frequency</strong> → pitch (Hz). <strong>Amplitude</strong> → loudness (decibels; +10 dB ≈ twice as loud perceived). <strong>Phase</strong> → where in its cycle a wave starts — inaudible alone, decisive when waves combine: in-phase waves amplify, opposite-phase waves cancel (the principle behind noise-cancelling headphones).</p><p>ADSR — Attack, Decay, Sustain, Release — describes how a sound’s amplitude unfolds. A gong’s long release <em>is</em> its therapy: no sharp edges for the nervous system to brace against.</p></div>
+  </div>
+</div></section>
+
+<!-- BINAURAL -->
+<section id="binaural"><div class="wrap">
+  <div class="section-head"><div class="kicker">04 — Binaural Beats</div><h2>Two tones in, one beat your brain creates</h2><p>Play 200 Hz in the left ear and 210 Hz in the right. Neither ear hears a pulse — but the brainstem, comparing the two, perceives a third, phantom <strong>10 Hz beat</strong>. That difference tone is the binaural beat.</p></div>
+  <div class="binaural">
+    <div class="grid2">
+      <div>
+        <div class="slider-label"><span>Carrier tone</span><span class="mono" id="carrierVal">200 Hz</span></div>
+        <input type="range" id="carrierSlider" min="80" max="400" value="200" step="1">
+        <div class="slider-label" style="margin-top:8px"><span>Beat frequency (difference)</span><span class="mono" id="beatVal">10 Hz — Alpha</span></div>
+        <input type="range" id="beatSlider" min="1" max="40" value="10" step="0.5">
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><button class="btn teal" id="binauralPlay" style="flex:1">▶ Play Binaural Beat</button><button class="btn secondary" id="binauralStop">Stop</button></div>
+        <p style="font-size:0.9rem;opacity:0.85">Left ear: <span class="mono" id="leftFreq">200 Hz</span> &nbsp;•&nbsp; Right ear: <span class="mono" id="rightFreq">210 Hz</span><br>Headphones are essential — speakers mix the tones in air and you just hear ordinary interference beats instead.</p>
+        <div class="note">Evidence note: studies find small, inconsistent effects on anxiety, attention and sleep. Treat binaural beats as a listening practice with plausible entrainment mechanisms — not a medical treatment.</div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px">Brainwave bands — pick a state</h3>
+        <div style="display:grid;gap:8px" id="brainPresets"></div>
+        <canvas id="brainCanvas" width="560" height="150" style="width:100%;height:130px;background:#1C1917;border-radius:14px;margin-top:14px;display:block"></canvas>
+        <p style="font-size:0.88rem;opacity:0.85;margin-top:8px">Brainwaves are electrical rhythms measured in the same unit — Hz. The entrainment hypothesis: a beat in a band may nudge brain activity toward that band. Delta for sleep, Alpha for calm focus, Gamma for binding perception.</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- SOLFEGGIO -->
+<section id="solfeggio"><div class="wrap">
+  <div class="section-head"><div class="kicker">05 — Healing Frequencies</div><h2>The Solfeggio frequencies & key tones</h2><p>A separate modern tradition: these nine specific frequencies borrow their Ut–Re–Mi names from the medieval chant scale, but they are <strong>not</strong> the notes of the C-major scale in Section 06 (where Mi = E, 329.63 Hz). Here Mi = 528 Hz by this tradition's own assignment. The associations below are the traditional ones taught in sound healing — tap any tone to hear it as a pure sine.</p></div>
+  <div class="sol-grid" id="solGrid"></div>
+  <div class="grid3" style="margin-top:16px">
+    <div class="card"><h3>432 Hz vs 440 Hz</h3><p>Concert pitch A4=440 Hz was standardised in the 20th century. 432 Hz is ~1.8% flatter — many listeners describe it as warmer. No robust evidence favours either medically; the audible difference itself is a fine listening exercise. Both are in the Frequency Lab quick row above.</p></div>
+    <div class="card"><h3>Schumann Resonance — 7.83 Hz</h3><p>The Earth–ionosphere cavity resonates at ~7.83 Hz, near the Theta/Alpha border. Too low to hear as pitch (infrasound), it is often cited in healing lore as “Earth’s heartbeat” and reproduced as a binaural or pulse rate rather than a tone.</p></div>
+    <div class="card"><h3>136.10 Hz — the “Om” tone</h3><p>Calculated by Hans Cousto in <em>The Cosmic Octave</em> by transposing Earth’s orbital period up many octaves. Tuning forks at 136.1 Hz are widely used in practice and correspond roughly to C♯. A beautiful example of mapping astronomy → sound via octaves.</p></div>
+  </div>
+</div></section>
+
+<!-- PIANO / CHAKRA -->
+<section id="piano"><div class="wrap">
+  <div class="section-head"><div class="kicker">06 — Notes • Colours • Chakras</div><h2>One note, many languages</h2><p>In the most common Western mapping, the C-major scale climbs the seven chakras from root to crown, and the rainbow in the same order. Play the piano — the panel below translates each note into every other system.</p></div>
+  <div class="piano-wrap">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center"><strong>Chakra Piano — C4 to C5</strong><span class="mono" id="pianoReadout" style="background:var(--surface2);padding:8px 12px;border-radius:999px;font-size:0.88rem">Tap a key</span></div>
+    <div class="piano" id="pianoEl"></div>
+    <div class="grid2">
+      <div id="chakraDetail" style="border-radius:16px;padding:18px;color:#fff;background:#DC2626"><h3 id="chakraTitle" style="color:#fff">C — Root Chakra • Muladhara</h3><p id="chakraText" style="color:rgba(255,255,255,0.92);margin:6px 0 0">261.63 Hz • Colour: Red • Element: Earth • Theme: safety, grounding, survival. Seed sound: LAM. Located at the base of the spine.</p></div>
+      <div><h3 style="margin-bottom:8px">Why these correspondences?</h3><p style="color:var(--muted);margin:0">Both pitch and colour are ordered spectrums that wrap into cycles (octaves / colour wheel), and both have seven named stations in their classic systems (7 notes, 7 rainbow colours, 7 chakras). Different traditions assign different exact pairings — this page uses the most widely taught modern system and labels it as such. The mapping is a contemplative framework, not a physical identity — except for the octave-to-light transposition, which is real arithmetic.</p></div>
+    </div>
+  </div>
+  <div class="table-wrap" style="margin-top:16px"><table><thead><tr><th>Note</th><th>Freq (Hz)</th><th>Colour</th><th>Chakra</th><th>Scale-degree solfège (C major)</th><th>Character</th></tr></thead><tbody id="noteTable"></tbody></table></div>
+</div></section>
+
+<!-- CYMATICS -->
+<section><div class="wrap">
+  <div class="section-head"><div class="kicker">07 — Cymatics</div><h2>Sound made visible: geometry</h2><p>Sprinkle sand on a vibrating plate (a Chladni plate) and it flees the moving areas, collecting in still lines — drawing the sound’s geometry. Higher frequencies make more intricate patterns. Choose a pattern below: this canvas simulates the nodal geometry.</p></div>
+  <canvas id="cymCanvas" width="900" height="380"></canvas>
+  <div class="control-row" id="cymBtns" style="margin-top:12px"></div>
+  <div class="grid3">
+    <div class="card"><h3>Chladni figures</h3><p>Ernst Chladni (1787) bowed metal plates covered in sand. Each resonant mode draws a unique mandala. The pattern <em>is</em> the frequency, frozen in space.</p></div>
+    <div class="card"><h3>Water & Faraday waves</h3><p>Tone through water creates standing-wave fountains and lattices — the basis of modern cymatics photography used in installations and album art.</p></div>
+    <div class="card"><h3>Lissajous figures</h3><p>Feed one tone to the X-axis and another to the Y-axis of an oscilloscope: simple ratios (1:1, 2:1, 3:2) draw clean loops. Consonant intervals literally look harmonious.</p></div>
+  </div>
+</div></section>
+
+<!-- SOUND MAPPED -->
+<section id="maps"><div class="wrap">
+  <div class="section-head"><div class="kicker">08 — Every Way to Capture Sound</div><h2>Sound, translated into everything else</h2><p>A sound is information. It can be perfectly captured, stored, and re-expressed in many forms — each reveals something the ear alone misses.</p></div>
+  <div class="map-grid">
+    <div class="map-card"><div class="icon">〰️</div><h3>Waveform</h3><p><strong>Time domain.</strong> Amplitude vs time — the oscilloscope / DAW view. Shows loudness, envelope, transients. Loses nothing: play it back and you hear the original.</p></div>
+    <div class="map-card"><div class="icon">🌈</div><h3>Spectrogram</h3><p><strong>Time × frequency × intensity as colour.</strong> Reveals harmonics, vibrato and formants invisible in a waveform. How speech recognition “sees” sound.</p></div>
+    <div class="map-card"><div class="icon">🎼</div><h3>Notation</h3><p><strong>Symbols on a staff.</strong> Pitch = vertical position, duration = note shape. A recipe for re-performance — lossy for timbre, perfect for melody and harmony.</p></div>
+    <div class="map-card"><div class="icon">🎨</div><h3>Colour</h3><p><strong>Chromesthesia mapping.</strong> 12 pitch classes → 12 hues. Via octave transposition, sound frequencies mathematically continue into light frequencies.</p></div>
+    <div class="map-card"><div class="icon">✦</div><h3>Geometry</h3><p><strong>Cymatics & Lissajous.</strong> Standing waves draw mandalas; interval ratios draw loops. Consonance becomes visible symmetry.</p></div>
+    <div class="map-card"><div class="icon">🔢</div><h3>Number & Ratio</h3><p><strong>Hz, ratios, cents.</strong> Octave 2:1, fifth 3:2, major third 5:4. Pythagoras built a cosmos from these. Every tuning system is arithmetic made audible.</p></div>
+    <div class="map-card"><div class="icon">💾</div><h3>Digital Data</h3><p><strong>Samples & MIDI.</strong> Audio = 44,100 amplitude measurements/sec (CD). MIDI stores note, velocity, timing — instructions, not sound. Both perfectly reproducible.</p></div>
+    <div class="map-card"><div class="icon">✋</div><h3>Touch & Body</h3><p><strong>Vibration & bone conduction.</strong> Low frequencies are felt, not heard — vibroacoustic chairs, deaf percussionists performing barefoot. Sound as tactile language.</p></div>
+    <div class="map-card"><div class="icon">💡</div><h3>Light</h3><p><strong>Transposed octaves & visualisers.</strong> Multiply Hz by 2⁴⁰ ≈ light. In performance: colour organs, synaesthetic visuals, laser Lissajous — sound driving light in real time.</p></div>
+    <div class="map-card"><div class="icon">🏛️</div><h3>Architecture</h3><p><strong>Space as instrument.</strong> Cathedral reverb, whispering galleries, Helmholtz resonators built into walls. Buildings store and shape sound — the oldest sound technology.</p></div>
+    <div class="map-card"><div class="icon">🧠</div><h3>Brainwaves</h3><p><strong>Neural entrainment.</strong> Rhythmic sound → measurable EEG rhythms. The binaural beat exists only in this translation: two sounds become one brain rhythm.</p></div>
+    <div class="map-card"><div class="icon">🌿</div><h3>Nature’s Notation</h3><p><strong>Birdsong sonograms, whale calls.</strong> Scientists transcribe animal sound into spectrograms to read dialects — proof the mapping works across species.</p></div>
+  </div>
+</div></section>
+
+<!-- PRACTICE + FAQ -->
+<section style="padding-top:8px"><div class="wrap">
+  <div class="grid2">
+    <div>
+      <div class="kicker">09 — Practice</div><h2 style="margin-bottom:14px">Instruments of the practice</h2>
+      <div style="display:grid;gap:10px">
+        <div class="card" style="padding:16px 18px"><strong>Tibetan / Himalayan bowls</strong> — metal, struck or rim-sung; rich inharmonic partials and slow beats between them. Placed on or near the body in “sound massage.”</div>
+        <div class="card" style="padding:16px 18px"><strong>Crystal singing bowls</strong> — quartz, usually tuned to specific notes/chakras; very pure, loud, long sustain. Handle volume with care.</div>
+        <div class="card" style="padding:16px 18px"><strong>Tuning forks</strong> — precise single frequencies (e.g. 128 Hz weighted forks for body contact, 528 Hz unweighted for listening).</div>
+        <div class="card" style="padding:16px 18px"><strong>Gongs, chimes, drums, voice</strong> — gongs for broadband “sound baths,” frame drums for rhythm/entrainment, and overtone chanting — one voice producing two audible notes at once.</div>
+      </div>
+      <div class="note" style="margin-top:12px">Safety: keep listening levels moderate (under ~85 dB for extended listening), use extra care with crystal bowls near ears, and treat sound healing as a complement to — never a replacement for — medical care.</div>
+    </div>
+    <div>
+      <div class="kicker">Questions</div><h2 style="margin-bottom:14px">Essential knowledge, answered</h2>
+      <details open><summary>Is sound healing scientifically proven?</summary><p style="color:var(--muted)">Parts are well-grounded: music and slow sound reliably reduce perceived stress and can lower heart rate and blood pressure modestly; vibration and entrainment are real physics. Specific claims — that 528 Hz repairs DNA, or a frequency cures an organ — are traditional beliefs without robust clinical evidence. Honest practice holds both.</p></details>
+      <details><summary>What frequency should I start with?</summary><p style="color:var(--muted)">For grounding and body-feel, 128–174 Hz. For calm focus, Alpha binaural beats (8–12 Hz difference on a ~200 Hz carrier). For an uplifting listen, 528 Hz. Let preference lead — the “best” frequency is the one you will actually sit with.</p></details>
+      <details><summary>Why do octaves sound like the same note?</summary><p style="color:var(--muted)">Because every harmonic of the higher note coincides with a harmonic of the lower. The brain reads that perfect overlap as identity of pitch class — the foundation of all scales, colour mapping and the Cosmic Octave.</p></details>
+      <details><summary>Can I do this without instruments?</summary><p style="color:var(--muted)">Yes — humming is the oldest tool. Hum on a slow exhale and feel the vibration in your chest and skull (try the seed sounds: LAM, VAM, RAM, YAM, HAM, OM). This page’s labs are also instruments: any tone here can anchor a 5-minute listening sit.</p></details>
+      <details><summary>A simple 10-minute session</summary><p style="color:var(--muted)">1) 2 min silence, notice breath. 2) Play 174 Hz in the Lab, sine wave, low volume — 3 min. 3) Switch to an Alpha binaural beat with headphones — 3 min. 4) Play your chakra note on the piano and hum along — 2 min. End in silence and notice what changed.</p></details>
+    </div>
+  </div>
+</div></section>
+
+<footer class="footer"><div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px"><span><strong style="color:var(--ink)">Resonance</strong> — an interactive sound healing installation. All tones generated live in your browser with the Web Audio API.</span><span>Frequencies in Hz • A4 = 440 Hz unless stated • Traditional associations labelled as tradition</span></div></footer>
+
+<script>
+let ctx=null, master=null;
+function ac(){ if(!ctx){ ctx=new (window.AudioContext||window.webkitAudioContext)(); master=ctx.createGain(); master.gain.value=0.5; master.connect(ctx.destination);} if(ctx.state==='suspended') ctx.resume(); return ctx; }
+function stopAll(){ if(window._osc){try{window._osc.stop()}catch(e){} window._osc=null;} if(window._bin){ window._bin.forEach(o=>{try{o.stop()}catch(e){}}); window._bin=null;} document.getElementById('playBtn').textContent='▶ Play Tone'; const bp=document.getElementById('binauralPlay'); if(bp) bp.textContent='▶ Play Binaural Beat'; }
+document.getElementById('stopAllTop').onclick=stopAll;
+document.getElementById('stopBtn').onclick=stopAll;
+
+/* Note / colour system */
+const NOTE_DATA=[
+ {note:'C', freq:261.63, color:'#DC2626', colorName:'Red', chakra:'Root • Muladhara', element:'Earth', theme:'Safety, grounding, survival', seed:'LAM', loc:'Base of the spine', sol:'Ut / Do'},
+ {note:'C#', freq:277.18, color:'#EA580C', colorName:'Red-Orange', chakra:'— (between Root & Sacral)', element:'—', theme:'Transition tone', seed:'—', loc:'—', sol:'Di'},
+ {note:'D', freq:293.66, color:'#F97316', colorName:'Orange', chakra:'Sacral • Svadhisthana', element:'Water', theme:'Creativity, feeling, pleasure', seed:'VAM', loc:'Below the navel', sol:'Re'},
+ {note:'D#', freq:311.13, color:'#F59E0B', colorName:'Amber', chakra:'— (between Sacral & Solar)', element:'—', theme:'Transition tone', seed:'—', loc:'—', sol:'Ri'},
+ {note:'E', freq:329.63, color:'#EAB308', colorName:'Yellow', chakra:'Solar Plexus • Manipura', element:'Fire', theme:'Will, confidence, digestion of experience', seed:'RAM', loc:'Upper abdomen', sol:'Mi'},
+ {note:'F', freq:349.23, color:'#22C55E', colorName:'Green', chakra:'Heart • Anahata', element:'Air', theme:'Love, compassion, connection', seed:'YAM', loc:'Centre of the chest', sol:'Fa'},
+ {note:'F#', freq:369.99, color:'#14B8A6', colorName:'Teal-Green', chakra:'— (Heart / Throat bridge)', element:'—', theme:'Transition tone', seed:'—', loc:'—', sol:'Fi'},
+ {note:'G', freq:392.00, color:'#0EA5E9', colorName:'Blue', chakra:'Throat • Vishuddha', element:'Ether / Sound', theme:'Expression, truth, listening', seed:'HAM', loc:'Throat', sol:'Sol'},
+ {note:'G#', freq:415.30, color:'#3B82F6', colorName:'Deep Blue', chakra:'— (Throat / Third-Eye bridge)', element:'—', theme:'Transition tone', seed:'—', loc:'—', sol:'Si'},
+ {note:'A', freq:440.00, color:'#6366F1', colorName:'Indigo', chakra:'Third Eye • Ajna', element:'Light', theme:'Intuition, insight, perception', seed:'OM / AUM', loc:'Between the brows', sol:'La'},
+ {note:'A#', freq:466.16, color:'#8B5CF6', colorName:'Violet', chakra:'— (Third-Eye / Crown bridge)', element:'—', theme:'Transition tone', seed:'—', loc:'—', sol:'Li'},
+ {note:'B', freq:493.88, color:'#A855F7', colorName:'Violet-Magenta', chakra:'Crown • Sahasrara', element:'Thought / Consciousness', theme:'Unity, transcendence, stillness', seed:'Silence / AH', loc:'Top of the head', sol:'Ti'},
+];
+function freqToNote(f){ const n=Math.round(12*Math.log2(f/440))+69; const names=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B']; const name=names[((n%12)+12)%12]; const oct=Math.floor(n/12)-1; const exact=440*Math.pow(2,(n-69)/12); const cents=Math.round(1200*Math.log2(f/exact)); return {name,oct,full:name+oct,cents,idx:((n%12)+12)%12}; }
+
+/* Hero */
+let heroOsc=null, heroGain=null, heroAnalyser=null;
+function playHero(freq){
+  ac(); if(heroOsc){try{heroOsc.stop()}catch(e){}}
+  heroOsc=ctx.createOscillator(); heroGain=ctx.createGain(); heroAnalyser=ctx.createAnalyser(); heroAnalyser.fftSize=1024;
+  heroOsc.type='sine'; heroOsc.frequency.value=freq; heroGain.gain.value=0.22;
+  heroOsc.connect(heroGain); heroGain.connect(heroAnalyser); heroAnalyser.connect(master); heroOsc.start();
+  document.getElementById('heroStatus').textContent='Now playing — live tone'; const hb=document.getElementById('heroBadge'); hb.textContent='● LIVE'; hb.style.background='#F59E0B'; hb.style.color='#000';
+  document.getElementById('heroFreq').textContent=freq+' Hz';
+  document.querySelectorAll('[data-hero]').forEach(b=>b.classList.toggle('active',+b.dataset.hero===freq));
+  drawHero();
+}
+function drawHero(){
+  const c=document.getElementById('heroCanvas'), g=c.getContext('2d');
+  function frame(){ if(!heroAnalyser) return; const data=new Uint8Array(heroAnalyser.fftSize); heroAnalyser.getByteTimeDomainData(data);
+    g.fillStyle='#0C0A09'; g.fillRect(0,0,c.width,c.height); g.strokeStyle='#F59E0B'; g.lineWidth=3; g.beginPath();
+    data.forEach((v,i)=>{ const x=i/data.length*c.width, y=v/255*c.height; i===0?g.moveTo(x,y):g.lineTo(x,y); }); g.stroke(); if(heroOsc) requestAnimationFrame(frame); }
+  frame();
+}
+document.querySelectorAll('[data-hero]').forEach(b=>b.onclick=()=>playHero(+b.dataset.hero));
+(function(){ const c=document.getElementById('heroCanvas'), g=c.getContext('2d'); g.fillStyle='#0C0A09'; g.fillRect(0,0,c.width,c.height); g.strokeStyle='#F59E0B'; g.lineWidth=3; g.beginPath(); for(let x=0;x<c.width;x++){ const y=c.height/2+Math.sin(x/c.width*Math.PI*10)*62; x===0?g.moveTo(x,y):g.lineTo(x,y);} g.stroke(); g.fillStyle='rgba(255,251,235,0.75)'; g.font='600 14px DM Sans'; g.fillText('Preview — 528 Hz sine wave. Tap 528 Hz to hear it.',16,24); })();
+
+/* Frequency Lab */
+let labOsc=null, labGain=null, labAnalyser=null, currentWave='sine';
+const slider=document.getElementById('freqSlider');
+function sliderToFreq(v){ return 32*Math.pow(2000/32, v/1000); }
+function freqToSlider(f){ return Math.log(f/32)/Math.log(2000/32)*1000; }
+function updateLab(){
+  const f=sliderToFreq(+slider.value);
+  document.getElementById('freqVal').textContent=f<100?f.toFixed(1):Math.round(f);
+  const n=freqToNote(f), d=NOTE_DATA[n.idx];
+  document.getElementById('noteName').textContent=n.full+(n.cents!==0?' ('+(n.cents>0?'+':'')+n.cents+'¢)':'')+' — '+(n.full==='C4'?'Middle C':d.chakra.split('•')[0].trim()+' range');
+  document.getElementById('noteDetail').textContent=d.chakra+' • '+d.colorName;
+  document.getElementById('wavelength').textContent=(343/f>=1?(343/f).toFixed(2)+' m':(343/f*100).toFixed(1)+' cm');
+  document.getElementById('period').textContent=(1000/f).toFixed(2)+' ms';
+  document.getElementById('octaves').textContent=Math.log2(f/32).toFixed(2);
+  document.getElementById('zone').textContent=f<80?'Felt more than heard':f<250?'Deep / grounding':f<600?'Warm / vocal range':f<1200?'Bright / present':'Brilliant / alerting';
+  const sw=document.getElementById('colorSwatch'); sw.style.background=d.color; document.getElementById('colorLabel').textContent='Mapped colour: '+d.colorName+' — '+n.name+' maps here on the pitch–colour wheel';
+  if(labOsc) labOsc.frequency.setTargetAtTime(f, ctx.currentTime, 0.03);
+  drawScopeStatic(f);
+}
+function drawScopeStatic(f){
+  const c=document.getElementById('scope'); if(labAnalyser) return; const g=c.getContext('2d');
+  g.fillStyle='#0C0A09'; g.fillRect(0,0,c.width,c.height); g.strokeStyle='#2DD4BF'; g.lineWidth=3; g.beginPath();
+  const cycles=Math.max(2,Math.min(18,f/55));
+  for(let x=0;x<c.width;x++){ const t=x/c.width, ph=t*cycles*Math.PI*2; let y;
+    if(currentWave==='sine') y=Math.sin(ph); else if(currentWave==='triangle') y=2/Math.PI*Math.asin(Math.sin(ph)); else if(currentWave==='square') y=Math.sign(Math.sin(ph))*0.75; else y=2*(t*cycles%1)-1;
+    const py=c.height/2 - y*c.height*0.36; x===0?g.moveTo(x,py):g.lineTo(x,py); } g.stroke();
+}
+slider.addEventListener('input', updateLab);
+document.getElementById('waveBtns').addEventListener('click',e=>{ const b=e.target.closest('[data-wave]'); if(!b) return; currentWave=b.dataset.wave; document.querySelectorAll('#waveBtns .chip').forEach(x=>x.classList.toggle('active',x===b)); if(labOsc) labOsc.type=currentWave; drawScopeStatic(sliderToFreq(+slider.value)); });
+document.querySelectorAll('[data-quick]').forEach(b=>b.onclick=()=>{ slider.value=freqToSlider(+b.dataset.quick); updateLab(); playLab(); });
+document.getElementById('playBtn').onclick=()=>playLab();
+function playLab(){
+  ac(); stopLabOnly();
+  labOsc=ctx.createOscillator(); labGain=ctx.createGain(); labAnalyser=ctx.createAnalyser(); labAnalyser.fftSize=2048;
+  labOsc.type=currentWave; labOsc.frequency.value=sliderToFreq(+slider.value); labGain.gain.value=0.25;
+  labOsc.connect(labGain); labGain.connect(labAnalyser); labAnalyser.connect(master); labOsc.start(); window._osc=labOsc;
+  document.getElementById('playBtn').textContent='■ Playing — tap Stop';
+  const c=document.getElementById('scope'), g=c.getContext('2d');
+  (function frame(){ if(!labAnalyser) return; const data=new Uint8Array(labAnalyser.fftSize); labAnalyser.getByteTimeDomainData(data);
+    g.fillStyle='#0C0A09'; g.fillRect(0,0,c.width,c.height); g.strokeStyle='#2DD4BF'; g.lineWidth=3; g.beginPath();
+    for(let i=0;i<data.length;i+=4){ const x=i/data.length*c.width, y=data[i]/255*c.height; i===0?g.moveTo(x,y):g.lineTo(x,y);} g.stroke(); if(labOsc) requestAnimationFrame(frame); })();
+}
+function stopLabOnly(){ if(labOsc){try{labOsc.stop()}catch(e){} labOsc=null; labAnalyser=null;} }
+document.getElementById('stopBtn').addEventListener('click',()=>{ stopLabOnly(); updateLab(); });
+updateLab();
+
+/* Waveforms grid */
+const WAVES=[
+ {type:'sine', name:'Sine', desc:'Pure tone. One frequency only. Tuning forks, flutes (nearly), test tones.', color:'#0F766E'},
+ {type:'triangle', name:'Triangle', desc:'Soft & mellow. Odd harmonics, quickly fading. Gentle synth pads, ocarina-like.', color:'#B45309'},
+ {type:'sawtooth', name:'Sawtooth', desc:'Bright & buzzy. All harmonics. Bowed strings, brass, reeds — richest natural shape.', color:'#BE123C'},
+ {type:'square', name:'Square', desc:'Hollow & woody. Odd harmonics, strong. Clarinet in its low register, chiptune.', color:'#1D4ED8'},
+];
+const wg=document.getElementById('waveGrid');
+WAVES.forEach((w,i)=>{ const btn=document.createElement('button'); btn.className='wave-card'+(i===0?' active':''); btn.innerHTML='<canvas width="300" height="80"></canvas><h4>'+w.name+' wave</h4><p>'+w.desc+'</p><p class="mono" style="margin-top:8px;font-size:0.8rem;color:var(--teal)">▶ Hear at 440 Hz</p>';
+ btn.onclick=()=>{ document.querySelectorAll('.wave-card').forEach(x=>x.classList.remove('active')); btn.classList.add('active'); currentWave=w.type; document.querySelectorAll('#waveBtns .chip').forEach(x=>x.classList.toggle('active',x.dataset.wave===w.type)); slider.value=freqToSlider(440); updateLab(); playLab(); };
+ wg.appendChild(btn);
+ const cv=btn.querySelector('canvas'), g=cv.getContext('2d'); g.strokeStyle=w.color; g.lineWidth=3; g.beginPath();
+ for(let x=0;x<300;x++){ const t=x/300, ph=t*Math.PI*6; let y; if(w.type==='sine')y=Math.sin(ph); else if(w.type==='triangle')y=2/Math.PI*Math.asin(Math.sin(ph)); else if(w.type==='square')y=Math.sign(Math.sin(ph))*0.7; else y=2*((t*3)%1)-1; const py=40-y*28; x===0?g.moveTo(x,py):g.lineTo(x,py);} g.stroke();
+});
+
+/* Binaural */
+const BRAIN=[
+ {name:'Delta', range:'0.5–4 Hz', beat:2, use:'Deep sleep, restoration', desc:'Slowest band — dominant in dreamless sleep.'},
+ {name:'Theta', range:'4–8 Hz', beat:6, use:'Meditation, memory, drowsiness', desc:'The twilight band — imagery, intuition, deep meditation.'},
+ {name:'Alpha', range:'8–13 Hz', beat:10, use:'Calm focus, relaxation', desc:'Idle rhythm of a relaxed, awake brain. Most popular beat target.'},
+ {name:'Beta', range:'13–30 Hz', beat:20, use:'Alert thinking, problem-solving', desc:'Active mind band. Too much correlates with anxious rumination.'},
+ {name:'Gamma', range:'30–40+ Hz', beat:40, use:'Insight, binding, peak focus', desc:'Fastest band — associated with integrating perception into unified awareness.'},
+];
+const bpEl=document.getElementById('brainPresets');
+BRAIN.forEach((b,i)=>{ const d=document.createElement('button'); d.className='preset'+(i===2?' active':''); d.innerHTML='<strong>'+b.name+' • '+b.range+'</strong><br><span style="font-size:0.88rem;opacity:0.8">'+b.use+' — '+b.desc+'</span>';
+ d.onclick=()=>{ document.querySelectorAll('#brainPresets .preset').forEach(x=>x.classList.remove('active')); d.classList.add('active'); document.getElementById('beatSlider').value=b.beat; updateBinaural(); }; bpEl.appendChild(d); });
+function updateBinaural(){
+  const carrier=+document.getElementById('carrierSlider').value, beat=+document.getElementById('beatSlider').value;
+  document.getElementById('carrierVal').textContent=carrier+' Hz';
+  const band=BRAIN.find(b=>beat<=4&&b.name==='Delta')|| (beat<8?BRAIN[1]:beat<13?BRAIN[2]:beat<=30?BRAIN[3]:BRAIN[4]);
+  document.getElementById('beatVal').textContent=beat+' Hz — '+band.name;
+  document.getElementById('leftFreq').textContent=carrier+' Hz'; document.getElementById('rightFreq').textContent=(carrier+beat)+' Hz';
+  if(window._bin){ window._bin[0].frequency.setTargetAtTime(carrier,ctx.currentTime,0.03); window._bin[1].frequency.setTargetAtTime(carrier+beat,ctx.currentTime,0.03); }
+  const c=document.getElementById('brainCanvas'), g=c.getContext('2d'); g.fillStyle='#1C1917'; g.fillRect(0,0,c.width,c.height);
+  g.strokeStyle='#F59E0B'; g.lineWidth=2.5; g.beginPath(); for(let x=0;x<c.width;x++){ const y=c.height/2+Math.sin(x/c.width*beat*Math.PI*1.4)*38*Math.sin(x/c.width*Math.PI); x===0?g.moveTo(x,y):g.lineTo(x,y);} g.stroke();
+  g.fillStyle='#FFFBEB'; g.font='700 15px DM Sans'; g.fillText('Perceived beat: '+beat+' Hz ('+band.name+')',14,24);
+}
+document.getElementById('carrierSlider').addEventListener('input',updateBinaural);
+document.getElementById('beatSlider').addEventListener('input',updateBinaural);
+document.getElementById('binauralPlay').onclick=()=>{
+  ac(); if(window._bin) stopAll();
+  const carrier=+document.getElementById('carrierSlider').value, beat=+document.getElementById('beatSlider').value;
+  const o1=ctx.createOscillator(), o2=ctx.createOscillator(), g1=ctx.createGain(), g2=ctx.createGain(), p1=ctx.createStereoPanner(), p2=ctx.createStereoPanner();
+  o1.frequency.value=carrier; o2.frequency.value=carrier+beat; o1.type=o2.type='sine'; g1.gain.value=g2.gain.value=0.22; p1.pan.value=-1; p2.pan.value=1;
+  o1.connect(g1); g1.connect(p1); p1.connect(master); o2.connect(g2); g2.connect(p2); p2.connect(master); o1.start(); o2.start(); window._bin=[o1,o2];
+  document.getElementById('binauralPlay').textContent='■ Playing — headphones on';
+};
+document.getElementById('binauralStop').onclick=stopAll;
+updateBinaural();
+
+/* Solfeggio */
+const SOL=[
+ {f:174, name:'Foundation', desc:'Sense of safety & security; the lowest solfeggio tone, linked to pain relief in tradition.', bg:'#7F1D1D'},
+ {f:285, name:'Quantum Cognition', desc:'Associated with tissue restoration and cellular communication in healing lore.', bg:'#9A3412'},
+ {f:396, name:'Liberation — Ut', desc:'Releasing guilt & fear. Root-adjacent. Seed of the original chant scale.', bg:'#DC2626'},
+ {f:417, name:'Change — Re', desc:'Undoing situations, facilitating change, clearing past patterns.', bg:'#EA580C'},
+ {f:528, name:'Transformation — Mi', desc:'The famous “love / miracle” tone. Near C5 (523 Hz). Most recorded & requested healing frequency.', bg:'#16A34A'},
+ {f:639, name:'Connection — Fa', desc:'Relationships, communication and harmony between people.', bg:'#0F766E'},
+ {f:741, name:'Expression — Sol', desc:'Awakening intuition, solving problems, expressing truth.', bg:'#0369A1'},
+ {f:852, name:'Intuition — La', desc:'Returning to spiritual order; seeing through illusion.', bg:'#4338CA'},
+ {f:963, name:'Oneness — Si', desc:'Crown tone. Pineal / unity association in modern tradition; near B5.', bg:'#7E22CE'},
+];
+const sg=document.getElementById('solGrid');
+SOL.forEach(s=>{ const b=document.createElement('button'); b.className='sol-card'; b.style.background=s.bg; b.innerHTML='<b>'+s.f+' Hz</b><span>'+s.name+'</span><p>'+s.desc+'</p><p style="font-weight:700;color:#fff">▶ Play tone</p>';
+ b.onclick=()=>{ slider.value=freqToSlider(s.f); currentWave='sine'; document.querySelectorAll('#waveBtns .chip').forEach(x=>x.classList.toggle('active',x.dataset.wave==='sine')); updateLab(); playLab(); document.getElementById('lab').scrollIntoView({behavior:'smooth'}); }; sg.appendChild(b); });
+
+/* Piano */
+const WHITE=['C','D','E','F','G','A','B','C5'];
+const pianoEl=document.getElementById('pianoEl');
+const whiteNotes=NOTE_DATA.filter(d=>!d.note.includes('#'));
+whiteNotes.concat([{note:'C5',freq:523.25,color:'#DC2626',colorName:'Red (octave)',chakra:'Root • octave return',element:'Earth',theme:'The octave completes — same note, higher light',seed:'LAM',loc:'—',sol:'Do\''}]).forEach(d=>{
+  const k=document.createElement('button'); k.className='key-white'; k.innerHTML='<span class="dot" style="background:'+d.color+'"></span>'+d.note+'<small style="font-weight:400;font-size:0.72rem">'+Math.round(d.freq)+' Hz</small>';
+  k.onclick=()=>playNote(d,k); pianoEl.appendChild(k);
+});
+const blackPos={'C#':0.62,'D#':1.62,'F#':3.62,'G#':4.62,'A#':5.62};
+NOTE_DATA.filter(d=>d.note.includes('#')).forEach(d=>{ const k=document.createElement('button'); k.className='key-black'; k.style.left='calc('+(blackPos[d.note]*12.5)+'% - 4.5%)'; k.textContent=d.note; k.onclick=()=>playNote(d,k); pianoEl.appendChild(k); });
+function playNote(d,el){
+  document.querySelectorAll('.key-white,.key-black').forEach(x=>x.classList.remove('active')); if(el) el.classList.add('active');
+  ac(); const o=ctx.createOscillator(), g=ctx.createGain(); o.type='sine'; o.frequency.value=d.freq; g.gain.setValueAtTime(0.35,ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+1.6); o.connect(g); g.connect(master); o.start(); o.stop(ctx.currentTime+1.7);
+  document.getElementById('pianoReadout').textContent=d.note+' • '+d.freq+' Hz • '+d.colorName+' • '+d.chakra;
+  const panel=document.getElementById('chakraDetail'); panel.style.background=d.color;
+  document.getElementById('chakraTitle').textContent=d.note+' — '+d.chakra;
+  document.getElementById('chakraText').textContent=d.freq+' Hz • Colour: '+d.colorName+' • Element: '+d.element+' • Theme: '+d.theme+'. Seed sound: '+d.seed+'. '+d.loc+'.';
+}
+const tbody=document.getElementById('noteTable');
+NOTE_DATA.filter(d=>!d.note.includes('#')).forEach(d=>{ const tr=document.createElement('tr'); tr.innerHTML='<td><strong>'+d.note+'</strong></td><td class="mono">'+d.freq+'</td><td><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'+d.color+';vertical-align:middle;margin-right:6px"></span>'+d.colorName+'</td><td>'+d.chakra+'</td><td>'+d.sol+'</td><td>'+d.theme+'</td>'; tbody.appendChild(tr); });
+
+/* Cymatics */
+const CYM=[{m:1,n:1,label:'Low • simple cross'},{m:2,n:2,label:'Mid • rings & cross'},{m:3,n:2,label:'Higher • star lattice'},{m:4,n:3,label:'High • intricate mandala'},{m:5,n:4,label:'Very high • fine geometry'}];
+let cymIdx=2;
+function drawCym(){
+  const c=document.getElementById('cymCanvas'), g=c.getContext('2d'), {m,n}=CYM[cymIdx];
+  g.fillStyle='#0F0E0C'; g.fillRect(0,0,c.width,c.height);
+  const img=g.createImageData(c.width,c.height);
+  // downsample for perf: draw via points
+  g.fillStyle='#0F0E0C'; g.fillRect(0,0,c.width,c.height);
+  for(let y=0;y<c.height;y+=3){ for(let x=0;x<c.width;x+=3){ const nx=x/c.width*2-1, ny=y/c.height*2-1;
+    const v=Math.abs(Math.cos(m*Math.PI*nx)*Math.cos(n*Math.PI*ny)-Math.cos(n*Math.PI*nx)*Math.cos(m*Math.PI*ny));
+    if(v<0.08){ g.fillStyle='rgba(245,197,66,'+(0.95-v*6)+')'; g.fillRect(x,y,2.4,2.4); }
+    else if(v<0.18){ g.fillStyle='rgba(120,90,30,0.35)'; g.fillRect(x,y,2,2); }
+  }}
+  g.fillStyle='#FFFBEB'; g.font='700 15px DM Sans'; g.fillText('Mode m='+m+', n='+n+' — '+CYM[cymIdx].label,16,26);
+}
+const cymBtns=document.getElementById('cymBtns');
+CYM.forEach((c,i)=>{ const b=document.createElement('button'); b.className='chip light'+(i===2?' active':''); b.textContent='Pattern '+(i+1)+' — '+c.label; b.onclick=()=>{ cymIdx=i; document.querySelectorAll('#cymBtns .chip').forEach(x=>x.classList.remove('active')); b.classList.add('active'); drawCym(); }; cymBtns.appendChild(b); });
+drawCym();
+</script>
+</body>
+</html>
